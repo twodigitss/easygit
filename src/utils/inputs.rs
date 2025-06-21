@@ -1,8 +1,5 @@
-use crate::common;
-use common::variables::SIZE;
-
 use std::{
-    io::{self, Write}, vec
+    io::{self, Write}
 };
 
 /// USED FOR COMMON STRING TYPE INPUTS
@@ -32,13 +29,6 @@ pub fn arg_input(label: &str) -> Vec<String>{
             .read_line(&mut args)
             .expect("Error reading line.");
 
-    //FIX: handle this case better in the future
-    // if args.trim().is_empty() {
-    //    println!("parameters: {}", args);
-    //    let mut args: Vec<String> = Vec::new();
-    //    args.push("".to_string());
-    // }
-
     let splitted: Vec<&str> = args.trim().split(' ').collect();
 
     //shadowed original var
@@ -46,18 +36,11 @@ pub fn arg_input(label: &str) -> Vec<String>{
     for s in splitted {
         args.push(s.to_string());
     }
-
-    // println!("{:?}",args);
     args
+}
 
-    // let mut safe_obj: [Option<String>; SIZE] = [
-    //     const { None }; SIZE
-    // ];
-    //
-    // for (index, value) in args.iter().enumerate(){
-    //     safe_obj[index] = Some(value.to_string());
-    // }
-    //
-    // safe_obj
-    
+pub fn vec_str_string(vector: Vec<&str>) -> Vec<String>{
+    let mut args: Vec<String> = Vec::new();
+    for s in vector { args.push(s.to_string()); }
+    args
 }

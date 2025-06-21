@@ -3,24 +3,23 @@ use std::{
     process::{Command, Stdio}
 };
 
-pub fn run(comm: &str, params: Vec<String>){
-    if params.is_empty() {
-        println!("No parameters provided");
+pub fn run(comm: &str, param: Option<&str>, params: Option<&Vec<String>> ){
+    let mut command = Command::new(comm);
+    match params{
+        Some(array) => {command.args(array);},
+        None => {
+            match param {
+                Some(value) => {command.arg(value);},
+                None => {println!("No parameters provided");}
+            }
+        }
     }
 
-    //TODO: handle .args() when params == empty
-    let command = Command::new(comm)
-        .args(params)
-        .stdout(Stdio::piped())
+    let child = command.stdout(Stdio::piped())
         .spawn()
         .expect("Command execution failed.");
 
-    // let mut safe: String = String::new();
-    // command.stdout.unwrap()
-    //     .read_to_string(&mut safe)
-    //     .expect("Failed to unwrap the output of the command");
-
-    let output: String = match command.stdout {
+    let output: String = match child.stdout {
         Some(mut stdout) => {
             let mut safe: String = String::new();
             stdout.read_to_string(&mut safe)
@@ -28,10 +27,9 @@ pub fn run(comm: &str, params: Vec<String>){
             safe
         },
         None => {
-            eprintln!("Error reading stdout ");
+            eprintln!("Error reading outcome of the command ");
             return; //TODO: manage properly
         }
-        
     };
     println!("{:?}", output);
 }

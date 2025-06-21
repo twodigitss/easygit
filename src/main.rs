@@ -1,5 +1,6 @@
 mod common;
 mod utils;
+mod usecases;
 use utils::{
     run_cmd,
     inputs::{input, arg_input},
@@ -7,8 +8,9 @@ use utils::{
 
 fn main() {
     println!("Hello, world!");
-    let comm: String = input("Comand: ");
-    let param: Vec<String> = arg_input("Parameters: ");
+    // let comm: String = input("Comand: ");
+    // let param: Vec<String> = arg_input("Parameters: ");
+    // run_cmd::run(comm.trim(), None, Some(&param));
 
-    run_cmd::run(comm.trim(), param);
+    usecases::setup::github_upl();
 }
