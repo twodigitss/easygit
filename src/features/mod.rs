@@ -1,2 +1,2 @@
-pub mod branch_checker;
+pub mod branch;
 pub mod visibility;

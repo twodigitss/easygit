@@ -15,7 +15,7 @@ use crate::utils::{self};
 pub fn init(){
     // 1st step!
     let mut params: Vec<String> = Vec::new();
-    utils::run_cmd::run("ls", Some("-ls"), None);
+    let _ = utils::run_cmd::run("ls", Some("-ls"), None);
 
     // 2nd step!
     let selection: String = loop {
@@ -31,14 +31,14 @@ pub fn init(){
 
     match selection.trim(){
         "1" => {
-            utils::run_cmd::run("ls", None, Some(
+            let _ = utils::run_cmd::run("ls", None, Some(
                 &vec!["test.md".to_string(), "Cargo.toml".to_string()]
             ));
             params.clear();
         },
         "2" => {
             let files: Vec<String> = utils::inputs::arg_input("Files: ");
-            utils::run_cmd::run("ls", None, Some(&files));
+            let _ = utils::run_cmd::run("ls", None, Some(&files));
 
         },
         _ => unreachable!()
@@ -46,7 +46,7 @@ pub fn init(){
 
     // 3rd step!
     let commit_msg: String = utils::inputs::input("Commit message: ");
-    utils::run_cmd::run("ls", None, Some(
+    let _ = utils::run_cmd::run("ls", None, Some(
         &vec!["-a".to_string(), "./".to_string() ]
     ));
 
@@ -57,7 +57,7 @@ pub fn init(){
 
 pub fn github_upl(){
     //do a minimal setup + steps to cloud upload
-    init();
+    // init();
     println!("Initializing cloud setup...");
 
     let link: String = loop{
