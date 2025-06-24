@@ -32,7 +32,9 @@ fn get_branches() -> Vec<String>{
         }
     };
 
-    for line in output.lines() {
+    for mut line in output.lines() {
+        line = line.trim();
+        if line.starts_with("*"){ line = &line[2..line.len()]; }
         branches.push(line.to_string());
     };
 
@@ -55,21 +57,19 @@ fn new() -> Result<(),String> {
 pub fn switch(){
     //TODO: list all branches first.
     let branches: Vec<String> = get_branches();
-    let selection: String = loop {
-        let selection: String = utils::inputs::input(
-            "(1) add everything or (2) select files?: "
-        );
-        match selection.trim(){
-            "1" => { break "1".to_string(); },
-            "2" => { break "2".to_string(); },
-            _ => { eprint!("Invalid option."); }
-        }
-    };
-    let selection = selection.parse::<i8>();
 
-    println!("{:?}",branches.get(0));
+    //map through the branches
+    let mut for_index = 1;
+    for branch in branches.iter() {
+        println!("({for_index}) : {branch}");
+        for_index += 1;
+    }
+    let selection: String = utils::inputs::input("Branch? (number) ");
+    let index: usize = selection
+        .parse::<usize>()
+        .unwrap_or(0);
 
-    // utils::run_cmd::run("git", Some("branch"), None);
-
+    let choice = &branches[index - 1];
+    println!("YOUR CHOICE: {choice:?}")
 
 }
