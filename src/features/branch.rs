@@ -1,8 +1,8 @@
 use crate::utils::{self};
-use std::{
-    io::Read, 
-    process::{Command, Stdio}
-};
+// use std::{
+//     io::Read, 
+//     process::{Command, Stdio}
+// };
 
 /*  To create a new branch in Git using the command line, you can use the command 
  *  git branch <branch-name> to create the branch, or git checkout -b <branch-name> 
@@ -12,25 +12,10 @@ use std::{
 
 fn get_branches() -> Vec<String>{
     let mut branches: Vec<String> = Vec::new();
-    let mut command: Command = Command::new("git");
-    let child = command.stdout(Stdio::piped())
-        .arg("branch")
-        .spawn()
-        .expect("Command execution failed.");
-
-    let output: String = match child.stdout {
-        Some(mut stdout) => {
-            let mut safe: String = String::new();
-            stdout.read_to_string(&mut safe)
-                .expect("Failed to unwrap the command's output.");
-            safe
-        },
-        None => {
-            eprintln!("Error reading outcome of the command. returning empty");
-            //TODO: manage properly
-            "".to_string()
-        }
-    };
+    
+    let output = utils::run_cmd::run(
+        "git", Some("branch"), None
+    );
 
     for mut line in output.lines() {
         line = line.trim();
@@ -70,6 +55,9 @@ pub fn switch(){
         .unwrap_or(0);
 
     let choice = &branches[index - 1];
-    println!("YOUR CHOICE: {choice:?}")
+    // println!("YOUR CHOICE: {choice:?}");
+    let _ = utils::run_cmd::run("git", None, Some(
+        &vec![ "checkout".to_string(), choice.to_owned() ]
+    ));
 
 }
