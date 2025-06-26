@@ -29,20 +29,7 @@ pub fn arg_input(label: &str) -> Vec<String>{
             .read_line(&mut args)
             .expect("Error reading line.");
 
-    let splitted: Vec<&str> = args.trim().split(' ').collect();
+    args.trim().split(' ')
+        .map(|w| w.to_string()).collect()
 
-    //shadowed original var
-    let mut args: Vec<String> = Vec::new();
-    for s in splitted {
-        args.push(s.to_string());
-    }
-    args
 }
-
-//i thought i could return a &str from a function without a
-//parameter of the same type lol
-// pub fn vec_str_string(vector: Vec<&str>) -> Vec<String>{
-//     let mut args: Vec<String> = Vec::new();
-//     for s in vector { args.push(s.to_string()); }
-//     args
-// }

@@ -10,8 +10,11 @@ use crate::utils::{self};
  *  git checkout -b my-feature creates a new branch called "my-feature" and switches to it immediately.
  * */
 
-fn get_branches() -> Vec<String>{
+//TUPLE: (branches, actual)
+//FIX: will this give an error if empty? handle that
+pub fn get_branches() -> (Vec<String>, String) {
     let mut branches: Vec<String> = Vec::new();
+    let mut actual_branch: &str = "main";
     
     let output = utils::run_cmd::run(
         "git", Some("branch"), None
@@ -19,33 +22,32 @@ fn get_branches() -> Vec<String>{
 
     for mut line in output.lines() {
         line = line.trim();
-        if line.starts_with("*"){ line = &line[2..line.len()]; }
+        if line.starts_with("*"){ 
+            line = &line[2..line.len()]; 
+            actual_branch = line;
+        }
         branches.push(line.to_string());
     };
 
     println!("{branches:?}");
-    branches
-
+    (branches, actual_branch.to_string())
 
 }
 
-#[warn(dead_code)]
-fn new() -> Result<(),String> {
+pub fn new_branch() -> Result<(),String> {
     let name: String = utils::inputs::input("Branch name: ");
     let _ = utils::run_cmd::run("git", None, Some(
-        &vec![ "branch".to_string(), name ]
+        &vec![ "branch", &*name ]
     ));
     println!("Done!");
     Ok(())
 }
 
 pub fn switch(){
-    //TODO: list all branches first.
-    let branches: Vec<String> = get_branches();
+    let branches: (Vec<String>, String) = get_branches();
 
-    //map through the branches
     let mut for_index = 1;
-    for branch in branches.iter() {
+    for branch in branches.0.iter() {
         println!("({for_index}) : {branch}");
         for_index += 1;
     }
@@ -54,10 +56,10 @@ pub fn switch(){
         .parse::<usize>()
         .unwrap_or(0);
 
-    let choice = &branches[index - 1];
-    // println!("YOUR CHOICE: {choice:?}");
+    let choice = &branches.0[index - 1];
     let _ = utils::run_cmd::run("git", None, Some(
-        &vec![ "checkout".to_string(), choice.to_owned() ]
+        &vec![ "checkout", choice ]
     ));
+    println!("Switched to branch {choice:?}!");
 
 }

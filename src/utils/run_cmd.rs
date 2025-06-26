@@ -6,7 +6,7 @@ use std::{
 pub fn run(
     comm: &str, 
     param: Option<&str>, 
-    params: Option<&Vec<String>> 
+    params: Option<&Vec<&str>> //i think str is more comftable than Strings
 ) -> String {
 
     let mut command = Command::new(comm);
