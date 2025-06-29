@@ -16,9 +16,7 @@ pub fn get_branches() -> (Vec<String>, String) {
     let mut branches: Vec<String> = Vec::new();
     let mut actual_branch: &str = "main";
     
-    let output = utils::run_cmd::run(
-        "git", Some("branch"), None
-    );
+    let output = utils::run_cmd::run("git", &vec![ "branch" ]);
 
     for mut line in output.lines() {
         line = line.trim();
@@ -29,37 +27,42 @@ pub fn get_branches() -> (Vec<String>, String) {
         branches.push(line.to_string());
     };
 
-    println!("{branches:?}");
+    // println!("{branches:?}");
     (branches, actual_branch.to_string())
 
 }
 
-pub fn new_branch() -> Result<(),String> {
+fn new_branch() -> Result<(),String> {
     let name: String = utils::inputs::input("Branch name: ");
-    let _ = utils::run_cmd::run("git", None, Some(
-        &vec![ "branch", &*name ]
-    ));
-    println!("Done!");
+    let _ = utils::run_cmd::run("git", &vec![ "branch", &*name ]);
+    println!("Created!");
     Ok(())
 }
 
 pub fn switch(){
-    let branches: (Vec<String>, String) = get_branches();
-
+    let mut branches: (Vec<String>, String) = get_branches();
+    branches.0.insert(branches.0.len(), "New branch".to_string());
+    
     let mut for_index = 1;
     for branch in branches.0.iter() {
         println!("({for_index}) : {branch}");
         for_index += 1;
     }
+
     let selection: String = utils::inputs::input("Branch? (number) ");
     let index: usize = selection
         .parse::<usize>()
         .unwrap_or(0);
 
-    let choice = &branches.0[index - 1];
-    let _ = utils::run_cmd::run("git", None, Some(
-        &vec![ "checkout", choice ]
-    ));
-    println!("Switched to branch {choice:?}!");
+    //does not exist till yet, so regather in silence and switch
+    // if NEW BRANCH is triggered, might re do the command and get 
+    if index == branches.0.len(){
+        let _ = new_branch();
+        switch(); //forgive me father for i have sinned
+    } 
+
+    let _ = utils::run_cmd::run("git", 
+        &vec![ "checkout", &branches.0[index - 1] ]
+    );
 
 }

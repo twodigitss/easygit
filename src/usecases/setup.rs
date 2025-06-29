@@ -6,37 +6,44 @@ use crate::{
 };
 
 ///THE MINIMAL VERSION OF CREATING A REPO
-//TODO: CREATE MAIN BRANCH, ADD GIT BRANCH, ADD GIT ORIGIN,
 pub fn init(){
-    let link: String = loop{
-        let temp: String = utils::inputs::input("Repository link: ");
-        match temp.is_empty() {
-            true => { },
-            false => { break temp; }
-            
+
+    utils::run_cmd::run("git", &vec!["init"]);
+    utils::run_cmd::run("touch", &vec!["README.md"]);
+    utils::run_cmd::run("git", &vec!["add", "."]);
+    utils::run_cmd::run("git", &vec!["commit", "-m", "initial commit"]);
+
+    // THIS ONLY DOES WORK AFTER FIRST COMMIT.
+    // i had no other option than initializing the whole thing above
+    utils::run_cmd::run("git", &vec!["branch", "-m", "main"]);
+
+    let mut validated = false;
+    let mut repository: String = String::new(); 
+    while !validated {
+        repository = loop{
+            let temp: String = utils::inputs::input("Repository link: ");
+            match temp.is_empty() {
+                true => { },
+                false => { break temp; }
+
+            };
         };
-    };
+        let it_is: bool = utils::valid_repo::is_valid_repo(&repository); 
+        if it_is {validated = true}
+    }
 
-    //TODO: manage a direct connection to upload 
-    //    direct example
-    /*  curl --request GET \
-             --url "https://api.github.com/repos/octocat/Spoon-Knife/issues" \
-             --header "Accept: application/vnd.github+json" \
-             --header "Authorization: Bearer YOUR-TOKEN"
-     * */
+    utils::run_cmd::run("git", &vec!["remote", "add", "origin", &repository]);
+    utils::run_cmd::run("git", &vec!["push", "-u", "origin", "main"]);
 
-    //Show branches and getting the actual (NONE BY DEFAULT)
-    let branches: (Vec<String>, String) = features::branch::get_branches();
 }
 
-// NOTE: THIS SETUP ASSUMES YOU ALREADY HAVE A ORIGIN REPO
-// NOTE: i can skip the first step (30 lines) this if i assume the user 
-// wants always to upload the whole thing, everybody knows how to use a gitignore...
-pub fn quick(){
+//did save this procedure in case i need it (i doubt it)
+#[warn(dead_code)]
+fn add_selection(){
     // 1st step!
     let selection: &str = loop {
         let selection: String = utils::inputs::input(
-            "(1) add everything or (2) select files?: "
+            "(1) add everything \n(2) select files?: "
         );
         match selection.trim(){
             "1" => { break "1" },
@@ -48,38 +55,38 @@ pub fn quick(){
     match selection {
         // git, add . 
         "1" => {
-            println!("Choosen add everyting...");
-            let _ = utils::run_cmd::run("ls", None, Some(
-                &vec!["test.md", "Cargo.toml"]
-            ));
+            // println!("Choosen add everyting...");
+            let _ = utils::run_cmd::run("ls", &vec!["test.md", "Cargo.toml"]);
         },
         // git, add <files> 
         "2" => {
-            println!("Choosen add files...");
+            // println!("Choosen add files...");
             let files: Vec<String> = utils::inputs::arg_input("Files: ");
             let vec_str: Vec<&str> = files.iter().map(|s| s.as_str()).collect();
-            let _ = utils::run_cmd::run("ls", None, Some(&vec_str));
+            let _ = utils::run_cmd::run("ls", &vec_str);
 
         },
         _ => unreachable!()
     }
 
-    // 2nd step!
-    // git, commit, -m, <commit_msg>
-    let commit_msg: String = utils::inputs::input("Commit message: ");
-    let _ = utils::run_cmd::run("ls", None, Some(
-        &vec!["-a", "./" ]
-    ));
+}
 
+// NOTE: THIS SETUP ASSUMES YOU ALREADY HAVE A ORIGIN REPO
+// AND YOU WANT TO UPLOAD EVERYTHING EXCEPT FOR WHATEVER YOU
+// HAVE ON YOUR GITIGNORE
+pub fn quick(){
+    // 1st step!
+    let _ = utils::run_cmd::run("git", &vec!["add", "."]);
+
+    // 2nd step!
+    let commit_msg: String = utils::inputs::input("Commit message: ");
+    let _ = utils::run_cmd::run("git", &vec!["commit", "-m", &commit_msg ]);
 
     // 3rd step!
     let default: (Vec<String>, String) = features::branch::get_branches();
-    //git, push, origin, <default_branch>
-    let _ = utils::run_cmd::run("ls", None, Some(
-        &vec!["-a", "./" ]
-    ));
+    let _ = utils::run_cmd::run("git", &vec!["push", "origin", &default.1 ]);
 
-    println!("Done! (:");
+    println!("Done!");
     
 }
 

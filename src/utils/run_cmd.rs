@@ -3,25 +3,9 @@ use std::{
     process::{Command, Stdio}
 };
 
-pub fn run(
-    comm: &str, 
-    param: Option<&str>, 
-    params: Option<&Vec<&str>> //i think str is more comftable than Strings
-) -> String {
-
+pub fn run(comm: &str, params: &Vec<&str> ) -> String {
     let mut command = Command::new(comm);
-    let command = command.stdout(Stdio::piped());
-    match params{
-        Some(array) => {command.args(array);},
-        None => {
-            match param {
-                Some(value) => {command.arg(value);},
-                None => {
-                    println!("No parameters provided");
-                }
-            }
-        }
-    }
+    let command = command.stdout(Stdio::piped()).args(params);
 
     let child = command.spawn().expect("Command execution failed.");
     let output: String = match child.stdout {
