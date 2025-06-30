@@ -3,7 +3,7 @@ use std::{
     process::{Command, Stdio}
 };
 
-pub fn run(comm: &str, params: &Vec<&str> ) -> String {
+pub fn run(comm: &str, params: &Vec<&str>, silent: bool ) -> String {
     let mut command = Command::new(comm);
     let command = command.stdout(Stdio::piped()).args(params);
 
@@ -19,6 +19,6 @@ pub fn run(comm: &str, params: &Vec<&str> ) -> String {
             "Error getting the value".to_string()
         }
     };
-    println!("{:?}", output);
+    if !silent { println!("{:?}", output); }
     output
 }

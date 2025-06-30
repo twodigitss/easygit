@@ -12,11 +12,11 @@ use crate::utils::{self};
 
 //TUPLE: (branches, actual)
 //FIX: will this give an error if empty? handle that
-pub fn get_branches() -> (Vec<String>, String) {
+pub fn get_branches(print_result: bool) -> (Vec<String>, String) {
     let mut branches: Vec<String> = Vec::new();
     let mut actual_branch: &str = "main";
     
-    let output = utils::run_cmd::run("git", &vec![ "branch" ]);
+    let output = utils::run_cmd::run("git", &vec![ "branch" ], print_result);
 
     for mut line in output.lines() {
         line = line.trim();
@@ -34,13 +34,13 @@ pub fn get_branches() -> (Vec<String>, String) {
 
 fn new_branch() -> Result<(),String> {
     let name: String = utils::inputs::input("Branch name: ");
-    let _ = utils::run_cmd::run("git", &vec![ "branch", &*name ]);
+    let _ = utils::run_cmd::run("git", &vec![ "branch", &*name ], true);
     println!("Created!");
     Ok(())
 }
 
 pub fn switch(){
-    let mut branches: (Vec<String>, String) = get_branches();
+    let mut branches: (Vec<String>, String) = get_branches(true);
     branches.0.insert(branches.0.len(), "New branch".to_string());
     
     let mut for_index = 1;
@@ -62,7 +62,29 @@ pub fn switch(){
     } 
 
     let _ = utils::run_cmd::run("git", 
-        &vec![ "checkout", &branches.0[index - 1] ]
+        &vec![ "checkout", &branches.0[index - 1] ], true
     );
+
+}
+
+//TODO: implemment this
+pub fn delete_branch(){
+    let mut branches: (Vec<String>, String) = get_branches(true);
+    
+    let mut for_index = 1;
+    for branch in branches.0.iter() {
+        println!("({for_index}) : {branch}");
+        for_index += 1;
+    }
+
+    let selection: String = utils::inputs::input("Delete: (number) ");
+    let index: usize = selection
+        .parse::<usize>()
+        .unwrap_or(0);
+
+    let _ = utils::run_cmd::run("git", 
+        &vec![ "branch", "-D", &branches.0[index - 1] ], true
+    );
+
 
 }

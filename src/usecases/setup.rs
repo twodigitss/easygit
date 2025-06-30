@@ -8,14 +8,14 @@ use crate::{
 ///THE MINIMAL VERSION OF CREATING A REPO
 pub fn init(){
 
-    utils::run_cmd::run("git", &vec!["init"]);
-    utils::run_cmd::run("touch", &vec!["README.md"]);
-    utils::run_cmd::run("git", &vec!["add", "."]);
-    utils::run_cmd::run("git", &vec!["commit", "-m", "initial commit"]);
+    utils::run_cmd::run("git", &vec!["init"], true);
+    utils::run_cmd::run("touch", &vec!["README.md"], true);
+    utils::run_cmd::run("git", &vec!["add", "."], true);
+    utils::run_cmd::run("git", &vec!["commit", "-m", "initial commit"], true);
 
     // THIS ONLY DOES WORK AFTER FIRST COMMIT.
     // i had no other option than initializing the whole thing above
-    utils::run_cmd::run("git", &vec!["branch", "-m", "main"]);
+    utils::run_cmd::run("git", &vec!["branch", "-m", "main"], true);
 
     let mut validated = false;
     let mut repository: String = String::new(); 
@@ -32,8 +32,8 @@ pub fn init(){
         if it_is {validated = true}
     }
 
-    utils::run_cmd::run("git", &vec!["remote", "add", "origin", &repository]);
-    utils::run_cmd::run("git", &vec!["push", "-u", "origin", "main"]);
+    utils::run_cmd::run("git", &vec!["remote", "add", "origin", &repository], true);
+    utils::run_cmd::run("git", &vec!["push", "-u", "origin", "main"], true);
 
 }
 
@@ -56,14 +56,14 @@ fn add_selection(){
         // git, add . 
         "1" => {
             // println!("Choosen add everyting...");
-            let _ = utils::run_cmd::run("ls", &vec!["test.md", "Cargo.toml"]);
+            let _ = utils::run_cmd::run("ls", &vec!["test.md", "Cargo.toml"], true);
         },
         // git, add <files> 
         "2" => {
             // println!("Choosen add files...");
             let files: Vec<String> = utils::inputs::arg_input("Files: ");
             let vec_str: Vec<&str> = files.iter().map(|s| s.as_str()).collect();
-            let _ = utils::run_cmd::run("ls", &vec_str);
+            let _ = utils::run_cmd::run("ls", &vec_str, true);
 
         },
         _ => unreachable!()
@@ -76,15 +76,15 @@ fn add_selection(){
 // HAVE ON YOUR GITIGNORE
 pub fn quick(){
     // 1st step!
-    let _ = utils::run_cmd::run("git", &vec!["add", "."]);
+    let _ = utils::run_cmd::run("git", &vec!["add", "."], true);
 
     // 2nd step!
     let commit_msg: String = utils::inputs::input("Commit message: ");
-    let _ = utils::run_cmd::run("git", &vec!["commit", "-m", &commit_msg ]);
+    let _ = utils::run_cmd::run("git", &vec!["commit", "-m", &commit_msg ], true);
 
     // 3rd step!
-    let default: (Vec<String>, String) = features::branch::get_branches();
-    let _ = utils::run_cmd::run("git", &vec!["push", "origin", &default.1 ]);
+    let default: (Vec<String>, String) = features::branch::get_branches(false);
+    let _ = utils::run_cmd::run("git", &vec!["push", "origin", &default.1 ], true);
 
     println!("Done!");
     
