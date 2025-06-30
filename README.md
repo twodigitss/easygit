@@ -8,8 +8,10 @@ Initializing repositories is also quick, if you want a project to be initialized
 
 | commands | description |
 |----------|-------------|
-| qg -i    | fully initialize a project with git | 
+| qg -i    | initialize a project locally with git | 
+| qg -I    | initialize a project on github with git | 
 | qg -q    | quick upload, just type a message |
 | qg -b    | branch switching and creation and deletion |
 | qg -bd   | branch deletion |
-| qg help  | get information about the program (soon)|
+| qg -rc   | soft reset the prev commit and re commit |
+| qg *     | get information about the program (soon) |

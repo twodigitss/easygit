@@ -34,8 +34,9 @@ pub fn get_branches(print_result: bool) -> (Vec<String>, String) {
 
 fn new_branch() -> Result<(),String> {
     let name: String = utils::inputs::input("Branch name: ");
-    let _ = utils::run_cmd::run("git", &vec![ "branch", &*name ], true);
-    println!("Created!");
+    utils::run_cmd::run("git", &vec![ "branch", &name ], true);
+    utils::run_cmd::run("git", &vec![ "checkout", "-b", &name ], true);
+    println!("Branch {name} created and switched!");
     Ok(())
 }
 
@@ -54,11 +55,10 @@ pub fn switch(){
         .parse::<usize>()
         .unwrap_or(0);
 
-    //does not exist till yet, so regather in silence and switch
-    // if NEW BRANCH is triggered, might re do the command and get 
+    //NOTE: i can avoid recursion by switching immediately
     if index == branches.0.len(){
         let _ = new_branch();
-        switch(); //forgive me father for i have sinned
+        // switch(); //forgive me father for i have sinned
     } 
 
     let _ = utils::run_cmd::run("git", 
@@ -69,7 +69,7 @@ pub fn switch(){
 
 //TODO: implemment this
 pub fn delete_branch(){
-    let mut branches: (Vec<String>, String) = get_branches(true);
+    let branches: (Vec<String>, String) = get_branches(true);
     
     let mut for_index = 1;
     for branch in branches.0.iter() {
@@ -85,6 +85,5 @@ pub fn delete_branch(){
     let _ = utils::run_cmd::run("git", 
         &vec![ "branch", "-D", &branches.0[index - 1] ], true
     );
-
 
 }

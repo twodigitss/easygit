@@ -6,7 +6,7 @@ use crate::{
 };
 
 ///THE MINIMAL VERSION OF CREATING A REPO
-pub fn init(){
+pub fn init(cloud: bool){
 
     utils::run_cmd::run("git", &vec!["init"], true);
     utils::run_cmd::run("touch", &vec!["README.md"], true);
@@ -17,24 +17,27 @@ pub fn init(){
     // i had no other option than initializing the whole thing above
     utils::run_cmd::run("git", &vec!["branch", "-m", "main"], true);
 
-    let mut validated = false;
-    let mut repository: String = String::new(); 
-    while !validated {
-        repository = loop{
-            let temp: String = utils::inputs::input("Repository link: ");
-            match temp.is_empty() {
-                true => { },
-                false => { break temp; }
+    match cloud {
+        true => {
+            let mut validated = false;
+            let mut repository: String = String::new(); 
+            while !validated {
+                repository = loop{
+                    let temp: String = utils::inputs::input("Repository link: ");
+                    match temp.is_empty() { true => { }, false => { break temp; } };
+                };
+                let it_is: bool = utils::valid_repo::is_valid_repo(&repository); 
+                if it_is {validated = true}
+            }
+            utils::run_cmd::run("git", &vec!["remote", "add", "origin", &repository], true);
+            utils::run_cmd::run("git", &vec!["push", "-u", "origin", "main"], true);
+            println!("Cloud setup done!")
+        },
+        false => {
+            println!("Local setup done!")
+        }
 
-            };
-        };
-        let it_is: bool = utils::valid_repo::is_valid_repo(&repository); 
-        if it_is {validated = true}
     }
-
-    utils::run_cmd::run("git", &vec!["remote", "add", "origin", &repository], true);
-    utils::run_cmd::run("git", &vec!["push", "-u", "origin", "main"], true);
-
 }
 
 //did save this procedure in case i need it (i doubt it)
