@@ -1,6 +1,6 @@
-# Gitngo
+# Easygit
 ## A Rust tool to make your git workflow less repetitive.
-Despite the name, <strong>Git'n'go</strong> is a small command-line utility written in Rust© to commit changes quickly without worring about the rest of the process.
+A small command-line utility written in Rust© to commit changes quickly without worring about the rest of the process.
 Normally you would have to add everything, type a title for the commit and then pushing to a branch.
 <strong>Save 60% of the effort</strong> by just typing a commit message and you are done!
 
