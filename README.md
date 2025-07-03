@@ -11,7 +11,6 @@ Initializing repositories is also quick, if you want a project to be initialized
 | qg -i    | initialize a project locally with git | 
 | qg -I    | initialize a project on github with git | 
 | qg -q    | quick upload, just type a message |
-| qg -b    | branch switching and creation and deletion |
-| qg -bd   | branch deletion |
+| qg -b    | branch switching, creation and deletion |
 | qg -rc   | soft reset the prev commit and re commit |
 | qg *     | get information about the program (soon) |

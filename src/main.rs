@@ -2,7 +2,9 @@ mod utils;
 mod usecases;
 mod features;
 
-use std::env;
+use std::{
+    env, fs
+};
 
 fn main() {
     // println!("Hello, world!"); //original hello world line cargo creates...
@@ -35,12 +37,11 @@ fn main() {
         //Branch switching
         features::branch::switch();
     }
-    else if args.contains(&String::from("-bd")) {
-        //Branch deletion
-        features::branch::delete_branch();
-    }
     else {
-        println!("easygit");
+        match fs::read_to_string("./README.md") {
+            Ok(text) => println!("{}", text),
+            Err(e) => println!("Error: {}", e),
+        }
     }
 
 }

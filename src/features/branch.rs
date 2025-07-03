@@ -27,14 +27,12 @@ pub fn get_branches(print_result: bool) -> (Vec<String>, String) {
         branches.push(line.to_string());
     };
 
-    // println!("{branches:?}");
     (branches, actual_branch.to_string())
 
 }
 
 fn new_branch() -> Result<(),String> {
     let name: String = utils::inputs::input("Branch name: ");
-    utils::run_cmd::run("git", &vec![ "branch", &name ], true);
     utils::run_cmd::run("git", &vec![ "checkout", "-b", &name ], true);
     println!("Branch {name} created and switched!");
     Ok(())
@@ -42,11 +40,14 @@ fn new_branch() -> Result<(),String> {
 
 pub fn switch(){
     let mut branches: (Vec<String>, String) = get_branches(true);
-    branches.0.insert(branches.0.len(), "New branch".to_string());
+    branches.0.insert(branches.0.len(), "new branch".to_string());
+    branches.0.insert(branches.0.len(), "delete branch".to_string());
+    branches.0.insert(branches.0.len(), "cancel".to_string());
+    let last_option: usize = branches.0.len();
     
     let mut for_index = 1;
     for branch in branches.0.iter() {
-        println!("({for_index}) : {branch}");
+        println!("[{for_index}]: {branch}");
         for_index += 1;
     }
 
@@ -55,28 +56,20 @@ pub fn switch(){
         .parse::<usize>()
         .unwrap_or(0);
 
-    //NOTE: i can avoid recursion by switching immediately
-    if index == branches.0.len(){
-        let _ = new_branch();
-        // switch(); //forgive me father for i have sinned
-    } 
+    if index == last_option { println!("Cancel selected!")}
+    else if index == (last_option - 1) { delete_branch(); } 
+    else if index == (last_option - 2) { new_branch(); } 
+    else {
+        let _ = utils::run_cmd::run("git", 
+            &vec![ "checkout", &branches.0[index - 1] ], true
+        );
+    }
 
-    let _ = utils::run_cmd::run("git", 
-        &vec![ "checkout", &branches.0[index - 1] ], true
-    );
 
 }
 
-//TODO: implemment this
 pub fn delete_branch(){
     let branches: (Vec<String>, String) = get_branches(true);
-    
-    let mut for_index = 1;
-    for branch in branches.0.iter() {
-        println!("({for_index}) : {branch}");
-        for_index += 1;
-    }
-
     let selection: String = utils::inputs::input("Delete: (number) ");
     let index: usize = selection
         .parse::<usize>()
