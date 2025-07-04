@@ -2,9 +2,7 @@ mod utils;
 mod usecases;
 mod features;
 
-use std::{
-    env, fs
-};
+use std::env;
 
 fn main() {
     // println!("Hello, world!"); //original hello world line cargo creates...
@@ -38,10 +36,19 @@ fn main() {
         features::branch::switch();
     }
     else {
-        match fs::read_to_string("./README.md") {
-            Ok(text) => println!("{}", text),
-            Err(e) => println!("Error: {}", e),
-        }
+        let text = "
+EASYGIT: GIT WORKFLOW MADE LESS REPETITIVE
+
+| commands      | description                              |
+|---------------|------------------------------------------|
+| easygit -i    | initialize a project locally with git    | 
+| easygit -I    | initialize a project on github with git  | 
+| easygit -q    | quick upload, just type a message        |
+| easygit -b    | branch switching, creation and deletion  |
+| easygit -rc   | soft reset the prev commit and re commit |
+";
+
+        println!("{text}");
     }
 
 }

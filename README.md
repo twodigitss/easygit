@@ -6,11 +6,11 @@ Normally you would have to add everything, type a title for the commit and then 
 
 Initializing repositories is also quick, if you want a project to be initialized and uploaded to an existing github repository, you just have to type the url of your github repository when prompted and everything you had will be saved and ready to quick - git more changes (:
 
-| commands | description |
-|----------|-------------|
-| qg -i    | initialize a project locally with git | 
-| qg -I    | initialize a project on github with git | 
-| qg -q    | quick upload, just type a message |
-| qg -b    | branch switching, creation and deletion |
-| qg -rc   | soft reset the prev commit and re commit |
-| qg *     | get information about the program (soon) |
+| commands      | description |
+|---------------|-------------|
+| easygit -i    | initialize a project locally with git | 
+| easygit -I    | initialize a project on github with git | 
+| easygit -q    | quick upload, just type a message |
+| easygit -b    | branch switching, creation and deletion |
+| easygit -rc   | soft reset the prev commit and re commit |
+| easygit *     | get information about the program (soon) |
